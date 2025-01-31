@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Kids Tutor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            background-image: url(p09k6d2t.jpg);
+            transition: background 0.5s;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+            margin-top: 50px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .button {
+            padding: 20px;
+            margin: 15px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: background 0.3s;
+            width: 250px;
+            height: 60px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .quiz-container {
+            display: none;
+        }
+        .congo-message {
+            display: none;
+            font-size: 22px;
+            font-weight: bold;
+            color: green;
+        }
+        .feedback {
+            font-size: 18px;
+            color: red;
+            display: none;
+        }
+        #quizOptions button {
+            font-size: 18px;
+            width: 200px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h2>AI Kids Tutor</h2>
+        <button class="button" onclick="showSection('quiz')">Start Quiz</button>
+    </div>
+
+    <div class="container quiz-container" id="quizContainer">
+        <h2>Select Age Group</h2>
+        <button class="button" onclick="selectAge(5)">Age 5</button>
+        <button class="button" onclick="selectAge(6)">Age 6</button>
+        <button class="button" onclick="selectAge(7)">Age 7</button>
+        <button class="button" onclick="selectAge(8)">Age 8</button>
+        <button class="button" onclick="selectAge(9)">Age 9</button>
+        <button class="button" onclick="selectAge(10)">Age 10</button>
+    </div>
+
+    <div class="container quiz-container" id="subjectContainer" style="display: none;">
+        <h2>Select Subject</h2>
+        <button class="button" onclick="startQuiz('maths')">Maths</button>
+        <button class="button" onclick="startQuiz('english')">English</button>
+        <button class="button" onclick="startQuiz('gk')">General Knowledge</button>
+    </div>
+
+    <div class="container quiz-container" id="questionContainer" style="display: none;">
+        <h3 id="quizQuestion"></h3>
+        <div id="quizOptions"></div>
+        <button class="button" onclick="nextQuizQuestion()">Next Question</button>
+        <p class="feedback" id="feedbackMessage">Wrong answer! Try again.</p>
+        <p class="congo-message" id="congoMessage">🎉 Congratulations! You successfully completed the quiz! 🎉</p>
+        <button class="button" onclick="backToQuiz()">Back to Quiz</button>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        let currentAge = 5;
+        let currentSubject = 'maths';
+        let score = 0;
+
+        const questions = {
+            5: {
+                maths: [
+                    { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], correctAnswer: 1 },
+                    { question: "What shape has 4 sides?", options: ["Circle", "Square", "Triangle", "Oval"], correctAnswer: 1 },
+                    { question: "What is 3 + 1?", options: ["4", "5", "6", "7"], correctAnswer: 0 }
+                ],
+                english: [
+                    { question: "Which is a color?", options: ["Cat", "Dog", "Red", "Apple"], correctAnswer: 2 },
+                    { question: "What comes after B?", options: ["A", "C", "D", "E"], correctAnswer: 1 },
+                    { question: "What is the first letter of 'Apple'?", options: ["A", "B", "C", "D"], correctAnswer: 0 }
+                ],
+                gk: [
+                    { question: "What color is the sky?", options: ["Green", "Blue", "Yellow", "Red"], correctAnswer: 1 },
+                    { question: "Which animal barks?", options: ["Cat", "Dog", "Horse", "Cow"], correctAnswer: 1 },
+                    { question: "What is the name of our planet?", options: ["Earth", "Mars", "Venus", "Jupiter"], correctAnswer: 0 }
+                ]
+            },
+            6: {
+                maths: [
+                    { question: "What is 3 + 3?", options: ["5", "6", "7", "8"], correctAnswer: 1 },
+                    { question: "What is 5 + 5?", options: ["8", "9", "10", "11"], correctAnswer: 2 },
+                    { question: "What is 6 + 1?", options: ["5", "6", "7", "8"], correctAnswer: 2 }
+                ],
+                english: [
+                    { question: "Which is an animal?", options: ["Apple", "Cat", "Table", "Ball"], correctAnswer: 1 },
+                    { question: "What comes after F?", options: ["E", "G", "H", "I"], correctAnswer: 1 },
+                    { question: "What is the last letter of 'Dog'?", options: ["A", "B", "C", "G"], correctAnswer: 3 }
+                ],
+                gk: [
+                    { question: "What is the color of grass?", options: ["Green", "Yellow", "Red", "Blue"], correctAnswer: 0 },
+                    { question: "Which animal is known as the king of the jungle?", options: ["Lion", "Tiger", "Elephant", "Bear"], correctAnswer: 0 },
+                    { question: "Which is the largest ocean?", options: ["Atlantic", "Indian", "Pacific", "Arctic"], correctAnswer: 2 }
+                ]
+            },
+            // Add similar questions for age 7 to 10 here...
+            7: {
+                maths: [
+                    { question: "What is 7 + 3?", options: ["9", "10", "11", "12"], correctAnswer: 3 },
+                    { question: "What is 15 - 7?", options: ["8", "9", "6", "7"], correctAnswer: 2 },
+                    { question: "What is 5 x 3?", options: ["12", "13", "15", "14"], correctAnswer: 2 }
+                ],
+                english: [
+                    { question: "Which word is a verb?", options: ["Run", "Blue", "Quick", "Happy"], correctAnswer: 0 },
+                    { question: "What is the opposite of 'Hot'?", options: ["Cold", "Warm", "Cool", "Freeze"], correctAnswer: 0 },
+                    { question: "Which of these is a noun?", options: ["Jump", "Running", "Dog", "Quickly"], correctAnswer: 2 }
+                ],
+                gk: [
+                    { question: "Which is the tallest mountain?", options: ["Everest", "K2", "Kilimanjaro", "Denali"], correctAnswer: 0 },
+                    { question: "Who was the first President of the USA?", options: ["Abraham Lincoln", "George Washington", "Thomas Jefferson", "John Adams"], correctAnswer: 1 },
+                    { question: "How many continents are there?", options: ["6", "7", "8", "5"], correctAnswer: 1 }
+                ]
+            },
+            8: {
+                maths: [
+                    { question: "What is 15 + 9?", options: ["24", "25", "26", "27"], correctAnswer: 0 },
+                    { question: "What is 12 x 5?", options: ["50", "60", "70", "80"], correctAnswer: 1 },
+                    { question: "What is 16 ÷ 4?", options: ["4", "5", "6", "7"], correctAnswer: 0 }
+                ],
+                english: [
+                    { question: "Which word is an adjective?", options: ["Quickly", "Happiness", "Beautiful", "Run"], correctAnswer: 2 },
+                    { question: "Which sentence is correct?", options: ["She can runs", "She run", "She running", "She runs"], correctAnswer: 3 },
+                    { question: "What is the opposite of 'Happy'?", options: ["Sad", "Excited", "Angry", "Fearful"], correctAnswer: 0 }
+                ],
+                gk: [
+                    { question: "Which country has the largest population?", options: ["China", "India", "USA", "Russia"], correctAnswer: 0 },
+                    { question: "What is the capital of Japan?", options: ["Seoul", "Beijing", "Tokyo", "Bangkok"], correctAnswer: 2 },
+                    { question: "Who invented the telephone?", options: ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "Albert Einstein"], correctAnswer: 0 }
+                ]
+            },
+            9: {
+                maths: [
+                    { question: "What is 18 ÷ 6?", options: ["2", "3", "4", "5"], correctAnswer: 1 },
+                    { question: "What is 9 x 8?", options: ["64", "72", "81", "90"], correctAnswer: 1 },
+                    { question: "What is 25 + 15?", options: ["40", "41", "42", "43"], correctAnswer: 0 }
+                ],
+                english: [
+                    { question: "Which of these is a synonym for 'Happy'?", options: ["Sad", "Joyful", "Angry", "Bored"], correctAnswer: 1 },
+                    { question: "Choose the correct sentence:", options: ["He don't know", "He doesn't know", "He don't knows", "He do not know"], correctAnswer: 1 },
+                    { question: "Which of these words is a noun?", options: ["Quick", "Happiness", "Easily", "Run"], correctAnswer: 1 }
+                ],
+                gk: [
+                    { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Venus", "Jupiter"], correctAnswer: 1 },
+                    { question: "What is the largest animal on Earth?", options: ["Elephant", "Blue Whale", "Shark", "Giraffe"], correctAnswer: 1 },
+                    { question: "What is the currency of the UK?", options: ["Dollar", "Euro", "Pound", "Yen"], correctAnswer: 2 }
+                ]
+            },
+            10: {
+                maths: [
+                    { question: "What is 45 ÷ 5?", options: ["8", "9", "10", "11"], correctAnswer: 1 },
+                    { question: "What is 34 x 6?", options: ["200", "204", "210", "220"], correctAnswer: 1 },
+                    { question: "What is 18 + 42?", options: ["60", "61", "62", "63"], correctAnswer: 0 }
+                ],
+                english: [
+                    { question: "What is a synonym for 'Quick'?", options: ["Slow", "Fast", "Rapid", "Quickly"], correctAnswer: 2 },
+                    { question: "What is the opposite of 'Big'?", options: ["Small", "Tiny", "Little", "Huge"], correctAnswer: 0 },
+                    { question: "Which sentence is correct?", options: ["I can plays", "I can play", "I can playing", "I play"], correctAnswer: 1 }
+                ],
+                gk: [
+                    { question: "What is the tallest building in the world?", options: ["Eiffel Tower", "Burj Khalifa", "Empire State Building", "Sydney Opera House"], correctAnswer: 1 },
+                    { question: "Who wrote 'Romeo and Juliet'?", options: ["William Shakespeare", "Jane Austen", "Charles Dickens", "Mark Twain"], correctAnswer: 0 },
+                    { question: "What is the largest desert in the world?", options: ["Sahara", "Kalahari", "Gobi", "Antarctic"], correctAnswer: 3 }
+                ]
+            }
+        
+        };
+
+        function showSection(section) {
+            if (section === 'quiz') {
+                document.getElementById('mainContainer').style.display = 'none';
+                document.getElementById('quizContainer').style.display = 'block';
+            }
+        }
+
+        function selectAge(age) {
+            currentAge = age;
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('subjectContainer').style.display = 'block';
+        }
+
+        function startQuiz(subject) {
+            currentSubject = subject;
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('subjectContainer').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const question = questions[currentAge][currentSubject][currentQuestionIndex];
+            document.getElementById('quizQuestion').innerText = question.question;
+            const options = question.options.map((option, index) => `<button class="button" onclick="checkAnswer(${index})">${option}</button>`).join('');
+            document.getElementById('quizOptions').innerHTML = options;
+            document.getElementById('feedbackMessage').style.display = 'none';
+        }
+
+        function checkAnswer(selectedOption) {
+            const correctAnswer = questions[currentAge][currentSubject][currentQuestionIndex].correctAnswer;
+            if (selectedOption === correctAnswer) {
+                score++;
+                document.getElementById('feedbackMessage').style.color = 'green';
+                document.getElementById('feedbackMessage').innerText = "Correct answer!";
+            } else {
+                document.getElementById('feedbackMessage').style.color = 'red';
+                document.getElementById('feedbackMessage').innerText = "Wrong answer! Try again.";
+            }
+            document.getElementById('feedbackMessage').style.display = 'block';
+        }
+
+        function nextQuizQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions[currentAge][currentSubject].length) {
+                loadQuestion();
+            } else {
+                document.getElementById('questionContainer').style.display = 'none';
+                document.getElementById('congoMessage').style.display = 'block';
+                document.getElementById('backButton').style.display = 'block';
+            }
+        }
+
+        function backToQuiz() {
+            document.getElementById('congoMessage').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('subjectContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

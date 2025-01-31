@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor for Kids</title>
+    <style>
+         /* style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #fffbf5;
+    color: #333;
+    text-align: center;
+    overflow: hidden;
+    animation: moveBackground 30s linear infinite; /* Added animation */
+    background-image: url('AAAABR5RtVVIsOwjdabL4FKDy0g3EsGHLaTf3uRZDRIpm8MIKkwGoMFAVhll5ul6fnbsbIvVqn_G8v3L1fPgznidTIcshiVa.jpg');
+    background-size: cover;
+}
+
+/* Define background animation */
+@keyframes moveBackground {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+h1 {
+    font-size: 3em;
+    color: #beb5b3;
+    margin-top: 20px;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 50px;
+}
+.box {
+    width: 200px;
+    height: 200px;
+    background-color: #f9f6f2;
+    border-radius: 15px;
+    margin-top: 90px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: column;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+.box:hover {
+    transform: scale(1.1);
+}
+.box img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+}
+.box p {
+    font-size: 1.2em;
+    color: #42c4f8;
+    font-weight: bold;
+}
+.box a {
+    color: #ffffff;
+    background-color: #54d0ef;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.box a:hover {
+    background-color: #58e84d;
+}
+
+.chat-container {
+    width: 400px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none; /* Hidden by default */
+    z-index: 1000;
+}
+
+.chat-box {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.bot-message, .user-message {
+    background-color: #e1e1e1;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+.bot-message {
+    text-align: left;
+}
+
+.user-message {
+    text-align: right;
+    background-color: #4CAF50;
+    color: white;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.chat-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4abed7;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+.chat-icon img {
+    width: 50px;
+    height: 50px;
+}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #fffbf5;
+            color: #333;
+            text-align: center;
+            overflow: hidden;
+            animation: moveBackground 30s linear infinite;
+            background-image: url('AAAABR5RtVVIsOwjdabL4FKDy0g3EsGHLaTf3uRZDRIpm8MIKkwGoMFAVhll5ul6fnbsbIvVqn_G8v3L1fPgznidTIcshiVa.jpg');
+            background-size: cover;
+        }
+
+        @keyframes moveBackground {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #60b7e0;
+            margin-top: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .box {
+            width: 200px;
+            height: 200px;
+            background-color: #f9f6f2;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .box:hover { transform: scale(1.1); }
+
+        .box img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .box p {
+            font-size: 1.2em;
+            color: #42c4f8;
+            font-weight: bold;
+        }
+
+        .box a {
+            color: #ffffff;
+            background-color: #54d0ef;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .box a:hover { background-color: #58e84d; }
+
+        .multiplication-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 150px;
+            height: 150px;
+            background-color: #e8e3dc;
+            color: rgb(93, 185, 206);
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .multiplication-box:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <img src="sticker-of-a-cartoon-quiz-symbol-vector-24086094.jpg" alt="Quiz Icon">
+            <p>Quiz</p>
+            <a href="index.html">Start Quiz</a>
+        </div>
+        <div class="box">
+            <img src="story-time-castle-1.jpg" alt="Stories Icon">
+            <p>Stories</p>
+            <a href="p1.html">Read Stories</a>
+        </div>
+        <div class="box">
+            <img src="th (1).jpg" alt="Rhymes Icon">
+            <p>Rhymes</p>
+            <a href="p1.html">Sing Rhymes</a>
+        </div>
+        <div class="box">
+            <img src="sign-of-feedback-symbol-is-isolated-on-a-white-background-icon-color-editable-free-vector.jpg" alt="Feedback Icon">
+            <p>Feedback</p>
+            <a href="feed.html">Give Feedback</a>
+        </div>
+        <div class="box">
+            <img src="717IQvnvYmL.png" alt="Drawing Pad Icon">
+            <p>Drawing Pad</p>
+            <a href="draw.html">Start Drawing</a>
+        </div>
+    </div>
+    <div class="chat-icon" onclick="toggleChat()">
+        <img src="th (2).jpg" alt="Chat Icon" />
+    </div>
+
+    <!-- Chatbox -->
+    <div class="chat-container" id="chat-container">
+        <div class="chat-box" id="chat-box">
+            <div class="bot-message">Hello! I'm your AI tutor. How can I help you today?</div>
+        </div>
+        <input type="text" id="user-input" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        // script.js
+function toggleChat() {
+    let chatContainer = document.getElementById("chat-container");
+    // Toggle visibility
+    if (chatContainer.style.display === "none" || chatContainer.style.display === "") {
+        chatContainer.style.display = "block"; // Show chat
+    } else {
+        chatContainer.style.display = "none"; // Hide chat
+    }
+}
+
+function sendMessage() {
+    let userInput = document.getElementById("user-input").value;
+    if (userInput.trim() === "") return;
+
+    // Display user's message
+    let userMessage = document.createElement("div");
+    userMessage.classList.add("user-message");
+    userMessage.textContent = userInput;
+    document.getElementById("chat-box").appendChild(userMessage);
+
+    // Clear the input field
+    document.getElementById("user-input").value = "";
+
+    // Respond to user input
+    let botMessage = document.createElement("div");
+    botMessage.classList.add("bot-message");
+
+    // Basic response logic
+    if (userInput.toLowerCase().includes("math")) {
+        botMessage.textContent = "Sure! What type of math problem would you like to solve?";
+    } else if (userInput.toLowerCase().includes("english")) {
+        botMessage.textContent = "Great! Do you need help with grammar, vocabulary, or something else?";
+    } else if (userInput.toLowerCase().includes("general knowledge")) {
+        botMessage.textContent = "Let's test your knowledge! Which topic would you like to explore?";
+    } else {
+        botMessage.textContent = "I'm sorry, I didn't quite get that. Can you ask something else?";
+    }
+
+    document.getElementById("chat-box").appendChild(botMessage);
+    document.getElementById("chat-box").scrollTop = document.getElementById("chat-box").scrollHeight;
+}
+    </script>
+    <div class="multiplication-box" onclick="location.href='mul.html'">
+        Multiplication Table
+    </div>
+</body>
+</html>

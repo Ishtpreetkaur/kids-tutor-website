@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Tables</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+            background-image: url(1626251557-616ba2795d077f6413514a6f33c764a04689c56e.jpg);
+            text-align: center;
+        }
+
+        h1 {
+            color: #ece6e6;
+            margin-bottom: 20px;
+            font-size: 32px; /* Bigger font size for main heading */
+        }
+
+        .tables-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .table-box {
+            width: 300px; /* Increased width */
+            height: 400px; /* Increased height */
+            background-color: #ffcc80;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-in-out forwards;
+        }
+
+        .table-box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .table-box h2 {
+            margin-bottom: 15px;
+            font-size: 30px; /* Bigger font size for table heading */
+            color: #333;
+        }
+
+        .table-box p {
+            font-size: 24px; /* Bigger font size for multiplication results */
+            margin: 5px 0;
+            color: #333;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Multiplication Tables</h1>
+    <div class="tables-container">
+        <script>
+            for (let i = 1; i <= 10; i++) {
+                document.write('<div class="table-box" style="animation-delay: ' + (i * 0.1) + 's">');
+                document.write('<h2>Table of ' + i + '</h2>');
+                for (let j = 1; j <= 10; j++) {
+                    document.write('<p>' + i + ' x ' + j + ' = ' + (i * j) + '</p>');
+                }
+                document.write('</div>');
+            }
+        </script>
+    </div>
+</body>
+</html>

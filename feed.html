@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kid's Feedback Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+            background-image: url(2076950.webp);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .feedback-form {
+            background-color: #fff;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: slideIn 0.5s ease-in-out;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: #4CAF50;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .input-field, .age-selector, .submit-btn {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-field:focus, .age-selector:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+
+        .input-field::placeholder, .age-selector::placeholder {
+            color: #888;
+        }
+
+        .emoji-rating {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .emoji {
+            font-size: 40px;
+            cursor: pointer;
+            transition: transform 0.2s, color 0.3s;
+        }
+
+        .emoji:hover {
+            transform: scale(1.2);
+            color: #4CAF50;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: #fff;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        .thank-you-msg {
+            display: none;
+            font-size: 20px;
+            color: #4CAF50;
+            margin-top: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .feedback-form {
+                padding: 25px;
+                max-width: 100%;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .emoji {
+                font-size: 35px;
+            }
+
+            .submit-btn {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="feedback-form">
+        <h2>Give Your Feedback</h2>
+        
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+
+        <input type="text" id="name" class="input-field" placeholder="Your Name" required oninput="updateProgress()">
+        <textarea id="feedback" class="input-field" placeholder="Your Feedback" rows="4" required oninput="updateProgress()"></textarea>
+
+        <!-- Age Selector -->
+        <select id="age" class="age-selector" required oninput="updateProgress()">
+            <option value="">Select Age</option>
+            <option value="5-7">5-7</option>
+            <option value="8-10">8-10</option>
+        </select>
+
+        <!-- Emoji Rating -->
+        <div class="emoji-rating">
+            <span class="emoji" data-value="happy" onclick="rateFeedback('😊')">😊</span>
+            <span class="emoji" data-value="neutral" onclick="rateFeedback('😐')">😐</span>
+            <span class="emoji" data-value="sad" onclick="rateFeedback('😞')">😞</span>
+        </div>
+
+        <!-- Voice Feedback -->
+        <button class="submit-btn" onclick="startRecording()">Record Feedback (Voice)</button>
+        <button class="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
+
+        <div class="thank-you-msg" id="thank-you-msg">Thank you for your feedback!</div>
+    </div>
+
+    <script>
+        let selectedEmoji = '';
+        let isRecording = false;
+
+        // Progress Bar
+        function updateProgress() {
+            const name = document.getElementById('name').value;
+            const feedback = document.getElementById('feedback').value;
+            const age = document.getElementById('age').value;
+            const progressBar = document.getElementById('progress-bar-fill');
+            
+            let progress = 0;
+            if (name) progress += 25;
+            if (feedback) progress += 50;
+            if (age) progress += 25;
+
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Emoji Rating
+        function rateFeedback(emoji) {
+            selectedEmoji = emoji;
+            const emojis = document.querySelectorAll('.emoji');
+            emojis.forEach(emoji => emoji.style.color = '#ccc');
+            event.target.style.color = '#4CAF50';  // Highlight selected emoji
+        }
+
+        // Voice Feedback (Web Speech API)
+        function startRecording() {
+            if (isRecording) {
+                recorder.stop();
+                isRecording = false;
+                alert('Recording stopped.');
+            } else {
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('feedback').value = transcript;
+                    updateProgress();
+                };
+
+                recognition.onerror = function() {
+                    alert('There was an error with the voice recognition.');
+                };
+                isRecording = true;
+            }
+        }
+
+        // Submit Feedback
+        function submitFeedback() {
+            const name = document.getElementById('name').value;
+            const feedback = document.getElementById('feedback').value;
+            const age = document.getElementById('age').value;
+
+            if (name && feedback && age && selectedEmoji) {
+                // Show thank you message
+                document.querySelector('.thank-you-msg').style.display = 'block';
+
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    document.querySelector('.thank-you-msg').style.display = 'none';
+                    document.getElementById('name').value = '';
+                    document.getElementById('feedback').value = '';
+                    document.getElementById('age').value = '';
+                    selectedEmoji = '';
+                    updateProgress();
+                }, 3000);
+            } else {
+                alert('Please complete all fields and select an emoji rating.');
+            }
+        }
+    </script>
+
+</body>
+</html>

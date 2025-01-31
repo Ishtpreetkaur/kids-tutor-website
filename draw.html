@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing Pad</title>
+    <style>
+      * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    background-image: url(set-cute-animal-children_28629-2868.jpg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 90%;
+    max-width: 900px;
+}
+
+h1 {
+    color: #2e3d49;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.canvas-container {
+    position: relative;
+}
+
+canvas {
+    border: 2px solid #000;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.toolbar {
+    margin-bottom: 20px;
+}
+
+button {
+    font-size: 2rem;
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+button:hover {
+    background-color: #ccc;
+}
+
+button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button:focus {
+    outline: none;
+}
+
+.color-picker {
+    margin-top: 20px;
+}
+
+input[type="color"] {
+    width: 50px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+    </style>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing Pad</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Kids Drawing Pad</h1>
+        <div class="toolbar">
+            <button id="crayonBtn">🖍️</button>
+            <button id="brushBtn">🖌️</button>
+            <button id="eraserBtn">🧽</button>
+            <button id="clearBtn">Clear</button>
+        </div>
+        <div class="color-picker">
+            <label for="colorInput">Choose Color:</label>
+            <input type="color" id="colorInput" value="#000000">
+        </div>
+        <canvas id="drawingCanvas" width="800" height="500"></canvas>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+const canvas = document.getElementById('drawingCanvas');
+const ctx = canvas.getContext('2d');
+const clearBtn = document.getElementById('clearBtn');
+const crayonBtn = document.getElementById('crayonBtn');
+const brushBtn = document.getElementById('brushBtn');
+const eraserBtn = document.getElementById('eraserBtn');
+const colorInput = document.getElementById('colorInput');
+
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+let currentTool = 'crayon';  // Default tool is crayon
+let brushColor = colorInput.value;  // Default color is the color picker value
+let brushSize = 5;
+
+// Event listeners for mouse events on the canvas
+canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing) return;
+    const currentX = e.offsetX;
+    const currentY = e.offsetY;
+
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    
+    if (currentTool === 'crayon') {
+        ctx.lineWidth = brushSize;
+        ctx.strokeStyle = brushColor;
+    } else if (currentTool === 'brush') {
+        ctx.lineWidth = brushSize + 2;  // Thicker line for brush
+        ctx.strokeStyle = brushColor;
+    } else if (currentTool === 'eraser') {
+        ctx.lineWidth = brushSize * 3;  // Larger size for eraser
+        ctx.strokeStyle = '#ffffff';  // White for eraser
+    }
+
+    ctx.lineCap = 'round';
+    ctx.lineTo(currentX, currentY);
+    ctx.stroke();
+
+    [lastX, lastY] = [currentX, currentY];
+});
+
+canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+});
+
+canvas.addEventListener('mouseout', () => {
+    isDrawing = false;
+});
+
+// Clear canvas when the clear button is clicked
+clearBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+// Switch tool to crayon
+crayonBtn.addEventListener('click', () => {
+    currentTool = 'crayon';
+    setActiveTool(crayonBtn);
+});
+
+// Switch tool to brush
+brushBtn.addEventListener('click', () => {
+    currentTool = 'brush';
+    setActiveTool(brushBtn);
+});
+
+// Switch tool to eraser
+eraserBtn.addEventListener('click', () => {
+    currentTool = 'eraser';
+    setActiveTool(eraserBtn);
+});
+
+// Change brush color when color input changes
+colorInput.addEventListener('input', (e) => {
+    brushColor = e.target.value;
+});
+
+// Function to highlight the active tool button
+function setActiveTool(activeBtn) {
+    // Remove active class from all buttons
+    [crayonBtn, brushBtn, eraserBtn].forEach(btn => btn.classList.remove('active'));
+    // Add active class to the clicked button
+    activeBtn.classList.add('active');
+}
+
+
+    </script>
+</body>
+</html>
